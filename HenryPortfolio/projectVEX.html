@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VEX Robotics — Henry Cayce</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --white: #f5f5f3;
+            --matte-white: #eeede9;
+            --off-white: #e8e7e3;
+            --light-gray: #d4d3cf;
+            --mid-gray: #9a9994;
+            --dark-gray: #3a3a38;
+            --black: #1a1a18;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-color: var(--white);
+            color: var(--black);
+            line-height: 1.7;
+        }
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            background: rgba(245, 245, 243, 0.92);
+            backdrop-filter: blur(10px);
+            padding: 1.2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .nav-logo {
+            font-size: 1.1rem;
+            font-weight: normal;
+            letter-spacing: 0.05em;
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .nav-back {
+            font-size: 0.8rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--mid-gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-back:hover { color: var(--black); }
+
+        /* HERO */
+        .hero {
+            padding: 10rem 4rem 6rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            border-bottom: 1px solid var(--off-white);
+        }
+
+        .hero-tag {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--mid-gray);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .hero-tag::after {
+            content: '';
+            display: block;
+            height: 1px;
+            width: 60px;
+            background: var(--light-gray);
+        }
+
+        .hero h1 {
+            font-size: 3.8rem;
+            font-weight: normal;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 span { color: var(--mid-gray); }
+
+        .hero-meta {
+            display: flex;
+            gap: 3rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--mid-gray);
+            margin-bottom: 0.3rem;
+        }
+
+        .meta-value { font-size: 0.95rem; }
+
+        .hero-intro {
+            max-width: 700px;
+            font-size: 1.1rem;
+            color: var(--mid-gray);
+            line-height: 1.9;
+            margin-bottom: 3rem;
+        }
+
+        .final-description p {
+            font-size: 0.95rem;
+            color: var(--mid-gray);
+            line-height: 1.9;
+            margin-bottom: 1rem;
+            max-width: 700px;
+        }
+
+        .spec-list {
+            margin-top: 1.5rem;
+            margin-bottom: 3rem;
+            list-style: none;
+            max-width: 600px;
+        }
+
+        .spec-list li {
+            font-size: 0.85rem;
+            color: var(--mid-gray);
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--off-white);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .spec-list li span:first-child {
+            color: var(--dark-gray);
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        /* SECTIONS */
+        .section {
+            padding: 6rem 4rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--mid-gray);
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-label::after {
+            content: '';
+            display: block;
+            height: 1px;
+            width: 60px;
+            background: var(--light-gray);
+        }
+
+        /* SLIDESHOW */
+        .slideshow {
+            position: relative;
+            background: var(--matte-white);
+            border: 1px solid var(--light-gray);
+            overflow: hidden;
+        }
+
+        .slideshow-track {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .slideshow-track.contain-images img {
+            min-width: 100%;
+            width: 100%;
+            height: 520px;
+            object-fit: contain;
+            background-color: var(--matte-white);
+            display: block;
+        }
+
+        .slideshow-track.onshape-images img {
+            min-width: 100%;
+            width: 100%;
+            height: 340px;
+            object-fit: contain;
+            background-color: var(--matte-white);
+            display: block;
+        }
+
+        .slideshow-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(245,245,243,0.9);
+            border: 1px solid var(--light-gray);
+            color: var(--black);
+            width: 38px;
+            height: 38px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            z-index: 2;
+        }
+
+        .slideshow-btn:hover { background: var(--white); }
+        .slideshow-btn.prev { left: 0.8rem; }
+        .slideshow-btn.next { right: 0.8rem; }
+
+        .slideshow-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.8rem;
+            border-top: 1px solid var(--light-gray);
+            background: var(--matte-white);
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--light-gray);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .dot.active { background: var(--black); }
+
+        .slideshow-caption {
+            padding: 0.8rem 1.2rem 1rem;
+            font-size: 0.78rem;
+            color: var(--mid-gray);
+            font-style: italic;
+            background: var(--matte-white);
+        }
+
+        /* ITERATION BLOCKS */
+        .iteration {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: start;
+            padding: 4rem 0;
+            border-bottom: 1px solid var(--off-white);
+        }
+
+        .iteration:last-child { border-bottom: none; }
+        .iteration.reverse { direction: rtl; }
+        .iteration.reverse > * { direction: ltr; }
+
+        .iteration-number {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--mid-gray);
+            margin-bottom: 1rem;
+        }
+
+        .iteration h2 {
+            font-size: 1.8rem;
+            font-weight: normal;
+            margin-bottom: 1.2rem;
+            line-height: 1.3;
+        }
+
+        .iteration p {
+            font-size: 0.95rem;
+            color: var(--mid-gray);
+            line-height: 1.9;
+            margin-bottom: 1rem;
+        }
+
+        .iter-spec-list {
+            margin-top: 1.5rem;
+            list-style: none;
+        }
+
+        .iter-spec-list li {
+            font-size: 0.85rem;
+            color: var(--mid-gray);
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--off-white);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .iter-spec-list li span:first-child {
+            color: var(--dark-gray);
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        /* MEDIA BLOCKS */
+        .media-block {
+            background: var(--matte-white);
+            border: 1px solid var(--light-gray);
+            overflow: hidden;
+        }
+
+        .media-block img {
+            width: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        .media-caption {
+            padding: 1rem 1.2rem;
+            font-size: 0.78rem;
+            color: var(--mid-gray);
+            font-style: italic;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        /* CHALLENGE SECTION */
+        .challenge-section {
+            background: var(--matte-white);
+            padding: 6rem 4rem;
+        }
+
+        .challenge-inner { max-width: 1100px; margin: 0 auto; }
+
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .challenge-card {
+            background: var(--white);
+            padding: 2.5rem;
+            border: 1px solid var(--light-gray);
+        }
+
+        .card-tag {
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--mid-gray);
+            margin-bottom: 1rem;
+        }
+
+        .challenge-card h3 {
+            font-size: 1.1rem;
+            font-weight: normal;
+            margin-bottom: 1rem;
+        }
+
+        .challenge-card p {
+            font-size: 0.9rem;
+            color: var(--mid-gray);
+            line-height: 1.8;
+        }
+
+        /* 32:9 BANNER IMAGE */
+        .banner-image-block {
+            margin-top: 2rem;
+            background: var(--white);
+            border: 1px solid var(--light-gray);
+            overflow: hidden;
+        }
+
+        .banner-image-block img {
+            width: 100%;
+            aspect-ratio: 32 / 9;
+            object-fit: cover;
+            display: block;
+        }
+
+        .banner-image-block .img-caption {
+            font-size: 0.78rem;
+            color: var(--mid-gray);
+            font-style: italic;
+            padding: 0.8rem 1.2rem;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        /* SIDE BY SIDE GIFS */
+        .side-by-side {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .side-by-side .media-block img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        /* DIVIDER BETWEEN CHALLENGE PAIRS */
+        .challenge-divider {
+            border: none;
+            border-top: 1px solid var(--light-gray);
+            margin: 3rem 0;
+        }
+
+        /* VIDEOS — LANDSCAPE */
+        .video-section {
+            padding: 6rem 4rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .video-wrapper {
+            background: var(--matte-white);
+            border: 1px solid var(--light-gray);
+            overflow: hidden;
+        }
+
+        .video-wrapper iframe {
+            width: 100%;
+            aspect-ratio: 16/9;
+            display: block;
+            border: none;
+        }
+
+        .video-caption {
+            padding: 1rem 1.2rem;
+            font-size: 0.78rem;
+            color: var(--mid-gray);
+            font-style: italic;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        /* TAKEAWAYS */
+        .takeaways-section {
+            background: var(--black);
+            padding: 6rem 4rem;
+        }
+
+        .takeaways-inner { max-width: 1100px; margin: 0 auto; }
+        .takeaways-inner .section-label { color: #666; }
+        .takeaways-inner .section-label::after { background: #333; }
+
+        .takeaways-inner h2 {
+            font-size: 2.2rem;
+            font-weight: normal;
+            color: var(--white);
+            margin-bottom: 3rem;
+            line-height: 1.3;
+        }
+
+        .takeaways-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .takeaway-item { border-top: 1px solid #333; padding-top: 1.5rem; }
+
+        .takeaway-number {
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            color: #555;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .takeaway-item h4 {
+            font-size: 1rem;
+            font-weight: normal;
+            color: var(--white);
+            margin-bottom: 0.8rem;
+        }
+
+        .takeaway-item p {
+            font-size: 0.85rem;
+            color: #777;
+            line-height: 1.8;
+        }
+
+        /* BACK */
+        .back-section {
+            padding: 5rem 4rem;
+            text-align: center;
+            border-top: 1px solid var(--off-white);
+        }
+
+        .back-section p {
+            font-size: 0.85rem;
+            color: var(--mid-gray);
+            margin-bottom: 2rem;
+        }
+
+        .btn-primary {
+            padding: 0.85rem 2.5rem;
+            background: var(--black);
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.82rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: background 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary:hover { background: var(--dark-gray); }
+
+        footer {
+            background: var(--black);
+            color: var(--mid-gray);
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.78rem;
+            letter-spacing: 0.1em;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            nav { padding: 1rem 2rem; }
+            .hero { padding: 8rem 2rem 4rem; }
+            .hero h1 { font-size: 2.5rem; }
+            .section { padding: 4rem 2rem; }
+            .iteration { grid-template-columns: 1fr; gap: 2rem; }
+            .iteration.reverse { direction: ltr; }
+            .challenge-section { padding: 4rem 2rem; }
+            .challenge-grid { grid-template-columns: 1fr; }
+            .video-section { padding: 4rem 2rem; }
+            .video-grid { grid-template-columns: 1fr; }
+            .side-by-side { grid-template-columns: 1fr; }
+            .takeaways-section { padding: 4rem 2rem; }
+            .takeaways-grid { grid-template-columns: 1fr; }
+            .back-section { padding: 4rem 2rem; }
+            .hero-meta { gap: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="index.html" class="nav-logo">Henry Cayce</a>
+        <a href="index.html" class="nav-back">← Back to Portfolio</a>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero">
+        <p class="hero-tag">Project</p>
+        <h1>VEX Robotics<br><span>2024–25 Season</span></h1>
+        <div class="hero-meta">
+            <div class="meta-item">
+                <div class="meta-label">Competition</div>
+                <div class="meta-value">VEX Robotics World Championship</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Season</div>
+                <div class="meta-value">High Stakes — 2024–25</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Tools</div>
+                <div class="meta-value">Onshape CAD · VEX V5 · C++</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Result</div>
+                <div class="meta-value">State Qualifier → World Championship</div>
+            </div>
+        </div>
+
+        <p class="hero-intro">
+            Over the course of the 2024–25 VEX Robotics season, our team designed, built, and iteratively refined a competitive robot capable of scoring rings on mobile goals, clamping field elements, and operating autonomously — ultimately qualifying for the VEX Robotics World Championship.
+        </p>
+
+        <!-- FINAL BUILD DESCRIPTION -->
+        <p class="section-label">Final Build</p>
+        <div class="final-description">
+            <p>The final robot represented the culmination of three major build iterations and dozens of hours of prototyping, testing, and refinement. Every challenge encountered throughout the season directly informed the final design — resulting in a robot that was mechanically robust, strategically capable, and competition-ready.</p>
+            <p>Key achievements included an omnidirectional pneumatic clamp capable of securing the octagonal base of mobile goals regardless of approach orientation. Autonomous navigation relied on a precisely tuned vertical odometry system. The ring intake was powered by a dual-motor chain connected via a unified chain route to flex wheels. A wallstake scoring mechanism was integrated with a compact motor concealed behind the battery.</p>
+        </div>
+
+        <ul class="spec-list">
+            <li><span>Clamp</span><span>Omnidirectional pneumatic — fits any goal orientation</span></li>
+            <li><span>Autonomous</span><span>Vertical odometry tracking</span></li>
+            <li><span>Ring Intake</span><span>Dual-motor chain with flex wheels</span></li>
+            <li><span>Wallstake Mechanism</span><span>Compact motor hidden behind battery</span></li>
+        </ul>
+
+        <!-- FINAL BUILD GALLERY SLIDESHOW -->
+        <p class="section-label">Final Build Gallery</p>
+        <div class="slideshow" id="final-slideshow">
+            <div class="slideshow-track contain-images" id="final-track">
+                <img src="VEX_images/States1.JPG" alt="States competition 1" />
+                <img src="VEX_images/final_side.jpeg" alt="Final build side view" />
+                <img src="VEX_images/States2.jpg" alt="States competition 2" />
+                <img src="VEX_images/final_bottom.jpeg" alt="Final build bottom view" />
+                <img src="VEX_images/Chain.jpeg" alt="Chain mechanism detail" />
+            </div>
+            <button class="slideshow-btn prev" onclick="moveSlide('final', -1)">‹</button>
+            <button class="slideshow-btn next" onclick="moveSlide('final', 1)">›</button>
+            <div class="slideshow-dots" id="final-dots">
+                <div class="dot active" onclick="goToSlide('final', 0)"></div>
+                <div class="dot" onclick="goToSlide('final', 1)"></div>
+                <div class="dot" onclick="goToSlide('final', 2)"></div>
+                <div class="dot" onclick="goToSlide('final', 3)"></div>
+                <div class="dot" onclick="goToSlide('final', 4)"></div>
+            </div>
+            <div class="slideshow-caption">Final robot at State competition — full build and mechanism detail</div>
+        </div>
+    </div>
+
+    <!-- BUILD PROCESS -->
+    <div class="section">
+        <p class="section-label">Build Process</p>
+
+        <!-- ITERATION 01 -->
+        <div class="iteration">
+            <div class="iteration-text">
+                <p class="iteration-number">Iteration 01</p>
+                <h2>First Build — Establishing the Foundation</h2>
+                <p>The first iteration established the core mechanical framework for the season. We built a six-motor flat drivetrain operating at 600 RPM, connected directly to gears at a 48:36 ratio — yielding an effective drivetrain speed of 450 RPM. This configuration provided a reliable and responsive base for field navigation.</p>
+                <p>The primary focus of this iteration was prototyping and tuning the hook chain mechanism — a key system responsible for launching rings onto the mobile goals. We experimented with the height and geometry of the hook to optimize ring placement consistency across varying field positions.</p>
+                <ul class="iter-spec-list">
+                    <li><span>Drivetrain</span><span>6-motor flat, 600 RPM</span></li>
+                    <li><span>Gear Ratio</span><span>48:36 → 450 RPM effective</span></li>
+                    <li><span>Key Mechanism</span><span>Hook chain for ring scoring</span></li>
+                </ul>
+            </div>
+            <div class="media-block">
+                <img src="VEX_images/1st_iteration.jpeg" alt="First iteration robot" style="height: 380px; object-fit: cover;" />
+                <div class="media-caption">First build — flat 6-motor drivetrain with hook chain prototype</div>
+            </div>
+        </div>
+
+        <!-- CAD REDESIGN -->
+        <div class="iteration reverse">
+            <div class="iteration-text">
+                <p class="iteration-number">CAD Redesign</p>
+                <h2>CAD-Driven Redesign</h2>
+                <p>Following our state qualification, we undertook a full redesign using the VEX V5 Onshape CAD library — allowing us to model and validate the new architecture before committing to a physical build, significantly reducing iteration time and material waste.</p>
+                <p>The core structural change was a transition to a stacked drivetrain, with the rear two motors mounted vertically to reduce the robot's footprint and free up space for the ring intake system. The chain motors were moved inside the chain loop for better protection and torque distribution.</p>
+                <ul class="iter-spec-list">
+                    <li><span>Design Tool</span><span>VEX V5 Onshape CAD Library</span></li>
+                    <li><span>Drivetrain</span><span>Stacked rear motors — reduced profile</span></li>
+                    <li><span>Chain Motors</span><span>2× 600 RPM — internal to chain loop</span></li>
+                </ul>
+            </div>
+            <div class="slideshow" id="onshape-slideshow">
+                <div class="slideshow-track onshape-images" id="onshape-track">
+                    <img src="VEX_images/Onshape1.png" alt="Onshape CAD view 1" />
+                    <img src="VEX_images/Onshape2.png" alt="Onshape CAD view 2" />
+                    <img src="VEX_images/Onshape3.png" alt="Onshape CAD view 3" />
+                </div>
+                <button class="slideshow-btn prev" onclick="moveSlide('onshape', -1)">‹</button>
+                <button class="slideshow-btn next" onclick="moveSlide('onshape', 1)">›</button>
+                <div class="slideshow-dots" id="onshape-dots">
+                    <div class="dot active" onclick="goToSlide('onshape', 0)"></div>
+                    <div class="dot" onclick="goToSlide('onshape', 1)"></div>
+                    <div class="dot" onclick="goToSlide('onshape', 2)"></div>
+                </div>
+                <div class="slideshow-caption">Onshape CAD model — stacked drivetrain redesign across three views</div>
+            </div>
+        </div>
+
+        <!-- ITERATION 02 -->
+        <div class="iteration">
+            <div class="iteration-text">
+                <p class="iteration-number">Iteration 02</p>
+                <h2>Physical Rebuild — Stacked Drivetrain</h2>
+                <p>With the CAD model validated, we executed the physical rebuild — introducing the stacked drivetrain, expanded ring intake, and repositioned chain motors. This configuration reduced the robot's overall profile while improving protection and torque distribution across the chain system.</p>
+                <p>This was the robot we used to qualify for State. In the weeks following our first competition, we continued refining the hook mechanism and intake geometry before the State tournament.</p>
+                <ul class="iter-spec-list">
+                    <li><span>Drivetrain</span><span>Stacked rear motors — smaller profile</span></li>
+                    <li><span>Chain Motors</span><span>Repositioned inside loop — protected</span></li>
+                    <li><span>Intake</span><span>Expanded ring intake space</span></li>
+                    <li><span>Result</span><span>State qualification build</span></li>
+                </ul>
+            </div>
+            <div class="media-block">
+                <img src="VEX_images/2nd.jpeg" alt="Second rebuild robot" style="height: 380px; object-fit: cover;" />
+                <div class="media-caption">Iteration 02 — stacked drivetrain with expanded intake space</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHALLENGES -->
+    <div class="challenge-section">
+        <div class="challenge-inner">
+            <p class="section-label">Technical Challenges</p>
+
+            <!-- CHALLENGE PAIR 1: Hook Chain + Odometry -->
+            <div class="challenge-grid">
+                <div class="challenge-card">
+                    <div class="card-tag">Problem</div>
+                    <h3>Hook Chain Disrupting Odometry</h3>
+                    <p>The hook chain mechanism's vibration and motion were interfering with the vertical odometry wheel — the sole sensor responsible for tracking the robot's position during autonomous mode. This caused significant positional drift, making reliable autonomous routines impossible.</p>
+                </div>
+                <div class="challenge-card">
+                    <div class="card-tag">Solution</div>
+                    <h3>Odometry Compaction & Hook Redesign</h3>
+                    <p>We redesigned and compacted the odometry mounting system to mechanically isolate it from chain-induced vibration. Simultaneously, we prototyped a new hook geometry to ensure consistent ring placement — requiring multiple iterations to validate ring behavior across varying approach angles.</p>
+                </div>
+            </div>
+
+            <!-- 32:9 BANNER IMAGE — directly under first problem/solution -->
+            <div class="banner-image-block">
+                <img src="VEX_images/3rd.jpeg" alt="Hook chain configuration causing odometry disruption" />
+                <div class="img-caption">Hook chain configuration causing vertical odometry wheel interference</div>
+            </div>
+
+            <!-- BEFORE & AFTER GIFS — directly under banner image -->
+            <div style="margin-top: 2rem;">
+                <p class="section-label">Hook Redesign — Before & After</p>
+                <div class="side-by-side">
+                    <div class="media-block">
+                        <img src="VEX_images/robot1.gif" alt="Original hook chain configuration" />
+                        <div class="media-caption">Original hook chain configuration — pre-redesign</div>
+                    </div>
+                    <div class="media-block">
+                        <img src="VEX_images/robot2.gif" alt="Redesigned hook" />
+                        <div class="media-caption">Redesigned Hook</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DIVIDER -->
+            <hr class="challenge-divider" />
+
+            <!-- CHALLENGE PAIR 2: Intake Ramp -->
+            <div class="challenge-grid" style="margin-top: 0;">
+                <div class="challenge-card">
+                    <div class="card-tag">Problem</div>
+                    <h3>Intake Ramp Inconsistency</h3>
+                    <p>The intake ramp struggled with ring deflection and inconsistent loading at speed. The material and geometry of the ramp needed to balance friction, rigidity, and responsiveness to handle rings cleanly without jamming.</p>
+                </div>
+                <div class="challenge-card">
+                    <div class="card-tag">Solution</div>
+                    <h3>Acetal Delrin & Elastic Resistance</h3>
+                    <p>We machined the intake ramp from Acetal Delrin — a high-performance engineering plastic with an exceptionally low coefficient of friction. An elastic resistance mechanism was integrated into the intake, allowing it to deflect upward on contact and snap back immediately, improving reliability at competition speeds.</p>
+                </div>
+            </div>
+
+            <!-- DELRIN IMAGE -->
+            <div style="margin-top: 3rem;">
+                <div class="media-block" style="max-width: 700px; margin: 0 auto;">
+                    <img src="VEX_images/Delrin.jpeg" alt="Acetal Delrin intake ramp" style="height: 400px; object-fit: cover;" />
+                    <div class="media-caption">Acetal Delrin intake ramp and elastic resistance mechanism</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- COMPETITION VIDEOS -->
+    <div class="video-section">
+        <p class="section-label">Competition Footage</p>
+        <div class="video-grid">
+            <div class="video-wrapper">
+                <iframe
+                    src="https://www.youtube.com/embed/ibt4_NAqoHQ"
+                    title="VEX Robot — Autonomous Skills Code"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+                <div class="video-caption">Final Robot — Autonomous Skills Code</div>
+            </div>
+            <div class="video-wrapper">
+                <iframe
+                    src="https://www.youtube.com/embed/drRYPiGHQ-I"
+                    title="VEX Robot — Match Footage"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+                <div class="video-caption">Final Robot — Match Footage</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAKEAWAYS -->
+    <div class="takeaways-section">
+        <div class="takeaways-inner">
+            <p class="section-label">What I Learned</p>
+            <h2>Engineering is iterative.<br>Every failure is a design constraint.</h2>
+            <div class="takeaways-grid">
+                <div class="takeaway-item">
+                    <div class="takeaway-number">01</div>
+                    <h4>CAD Before You Build</h4>
+                    <p>Using Onshape to model the rebuild before cutting metal saved significant time and revealed spatial conflicts — like motor placement — that would have been costly to discover on the physical robot.</p>
+                </div>
+                <div class="takeaway-item">
+                    <div class="takeaway-number">02</div>
+                    <h4>Material Selection Matters</h4>
+                    <p>Switching to Acetal Delrin was a small change with a large impact. Choosing the right material for high-friction, high-speed components is as important as the mechanical design itself.</p>
+                </div>
+                <div class="takeaway-item">
+                    <div class="takeaway-number">03</div>
+                    <h4>Systems Interact</h4>
+                    <p>The hook chain disrupting the odometry wheel was a lesson in systems thinking — a change in one subsystem can create unexpected failures in another. Designing with the full system in mind is critical in competitive robotics.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BACK -->
+    <div class="back-section">
+        <p>Explore more work</p>
+        <a href="index.html" class="btn-primary">← Back to Portfolio</a>
+    </div>
+
+    <footer>
+        <p>© 2025 Henry Cayce</p>
+    </footer>
+
+    <script>
+        const slideshows = {};
+
+        function initSlideshow(id) {
+            slideshows[id] = { current: 0 };
+        }
+
+        function moveSlide(id, dir) {
+            const track = document.getElementById(id + '-track');
+            const dots = document.getElementById(id + '-dots').children;
+            const total = track.children.length;
+            slideshows[id].current = (slideshows[id].current + dir + total) % total;
+            track.style.transform = `translateX(-${slideshows[id].current * 100}%)`;
+            Array.from(dots).forEach((d, i) => d.classList.toggle('active', i === slideshows[id].current));
+        }
+
+        function goToSlide(id, index) {
+            const track = document.getElementById(id + '-track');
+            const dots = document.getElementById(id + '-dots').children;
+            slideshows[id].current = index;
+            track.style.transform = `translateX(-${index * 100}%)`;
+            Array.from(dots).forEach((d, i) => d.classList.toggle('active', i === index));
+        }
+
+        initSlideshow('onshape');
+        initSlideshow('final');
+
+        // FADE IN ON SCROLL
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.iteration, .challenge-card, .banner-image-block, .takeaway-item, .video-wrapper, .media-block, .slideshow').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+
+</body>
+</html>
